@@ -25,7 +25,6 @@ def notify(msg):
     cmd = [ENACIT1LOGS_BIN, ]
     for tag in ENACIT1LOGS_TAGS:
         cmd.extend(["-t", tag])
-    cmd.extend(["-t", "notify"])
     cmd.extend(["-m", msg])
     subprocess.call(cmd)
 
@@ -50,10 +49,10 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if ACTION == "1":  # Backup process begins
-        notify("Backup process begins")
+        # notify("Backup process begins")
         pass
     elif ACTION == "2":  # Backup process ends
-        notify("Backup process ends")
+        # notify("Backup process ends")
         pass
     elif ACTION == "3":  # A new snapshot was taken
         SNAPSHOT_ID = sys.argv[4]
@@ -76,16 +75,16 @@ if __name__ == "__main__":
         else:
             pass
     elif ACTION == "5":  # On (graphical) App start.
-        notify("On (graphical) App start")
+        # notify("On (graphical) App start")
         pass
     elif ACTION == "6":  # On (graphical) App close.
-        notify("On (graphical) App close")
+        # notify("On (graphical) App close")
         pass
     elif ACTION == "7":  # Mount all necessary drives.
-        notify("Mount all necessary drives")
+        # notify("Mount all necessary drives")
         cmd = [MOUNT_BIN, MOUNT_PATH]
         subprocess.call(cmd)
     elif ACTION == "8":  # Unmount all drives.
-        notify("Unmount all drives")
+        # notify("Unmount all drives")
         cmd = [UMOUNT_BIN, MOUNT_PATH]
         subprocess.call(cmd)
