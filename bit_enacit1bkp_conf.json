@@ -1,0 +1,23 @@
+{
+    "include": [
+        "/home",
+        "/etc",
+        "/root",
+        "/usr/local"
+    ],
+    "exclude": [
+        ".gvfs",
+        "/proc/*",
+        "/sys/*",
+        "/dev/*",
+        "/run/*",
+        ".cache*",
+        "[Cc]ache*",
+        ".thumbnails*",
+        "[Tt]rash*",
+        "*.backup*",
+        "*~",
+        ".dropbox*",
+        "no_backup"
+    ]
+}

@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+
+"""
+BackInTime user-callback
+
+used to
++ mount /bkp before backup
++ notify enacit1logs of any error
++ notify enacit1logs when backup is done
++ umount /bkp when everything is complete
+"""
+
+import sys
+import subprocess
+
+ENACIT1LOGS_BIN = "/usr/local/bin/enacit1logs.py"
+ENACIT1LOGS_TAGS = ["backintime"]
+
+MOUNT_BIN = "/bin/mount"
+UMOUNT_BIN = "/bin/umount"
+MOUNT_PATH = "/bkp"
+
+def notify(msg):
+    print(msg)
+    cmd = [ENACIT1LOGS_BIN, ]
+    for tag in ENACIT1LOGS_TAGS:
+        cmd.extend(["-t", tag])
+    cmd.extend(["-t", "notify"])
+    cmd.extend(["-m", msg])
+    subprocess.call(cmd)
+
+def notify_error(msg):
+    print(msg, file=sys.stderr)
+    cmd = [ENACIT1LOGS_BIN, ]
+    for tag in ENACIT1LOGS_TAGS:
+        cmd.extend(["-t", tag])
+    cmd.extend(["-t", "error"])
+    cmd.extend(["-t", "notify"])
+    cmd.extend(["-m", msg])
+    subprocess.call(cmd)
+
+
+if __name__ == "__main__":
+    try:
+        PROFILE_ID = sys.argv[1]
+        PROFILE_NAME = sys.argv[2]
+        ACTION = sys.argv[3]
+    except IndexError:
+        notify_error("Error, couldn't read 3 positional arguments. aborting.")
+        sys.exit(1)
+
+    if ACTION == "1":  # Backup process begins
+        notify("Backup process begins")
+        pass
+    elif ACTION == "2":  # Backup process ends
+        notify("Backup process ends")
+        pass
+    elif ACTION == "3":  # A new snapshot was taken
+        SNAPSHOT_ID = sys.argv[4]
+        SNAPSHOT_PATH = sys.argv[5]
+        notify("A new snapshot was taken : {} {}".format(SNAPSHOT_ID, SNAPSHOT_PATH))
+    elif ACTION == "4":  # There was an error
+        ERROR_CODE = sys.argv[4]
+        if ERROR_CODE == "1":  # The application is not configured
+            notify_error("The application is not configured")
+            pass
+        elif ERROR_CODE == "2":  # A "take snapshot" process is already running
+            notify_error("A 'take snapshot' process is already running")
+            pass
+        elif ERROR_CODE == "3":  # Can't find snapshots folder (is it on a removable drive ?)
+            notify_error("Can't find snapshots folder (is it on a removable drive ?)")
+            pass
+        elif ERROR_CODE == "4":  # A snapshot for "now" already exist
+            notify_error("A snapshot for 'now' already exist")
+            pass
+        else:
+            pass
+    elif ACTION == "5":  # On (graphical) App start.
+        notify("On (graphical) App start")
+        pass
+    elif ACTION == "6":  # On (graphical) App close.
+        notify("On (graphical) App close")
+        pass
+    elif ACTION == "7":  # Mount all necessary drives.
+        notify("Mount all necessary drives")
+        cmd = [MOUNT_BIN, MOUNT_PATH]
+        subprocess.call(cmd)
+    elif ACTION == "8":  # Unmount all drives.
+        notify("Unmount all drives")
+        cmd = [UMOUNT_BIN, MOUNT_PATH]
+        subprocess.call(cmd)

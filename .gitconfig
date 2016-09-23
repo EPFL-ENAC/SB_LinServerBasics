@@ -1,0 +1,17 @@
+[user]
+	name = Samuel Bancal
+	email = Samuel.Bancal@epfl.ch
+	signingkey = E3573AC1
+[core]
+	editor = vim
+[merge]
+	tool = meld
+[alias]
+	add = add --all
+	meld = difftool --dir-diff
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	visual = !gitk
+	lg = log --oneline --all --graph --decorate
+[push]
+	default = simple

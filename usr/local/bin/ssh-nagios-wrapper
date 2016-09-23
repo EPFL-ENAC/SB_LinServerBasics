@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+
+# Cedric.Briner@unige.ch 22.11.2007
+# Samuel.Bancal@epfl.ch  09.04.2009
+#                        15.04.2009
+
+# this wrapper allows to define which command are allowed
+# with a certain ssh key. This could be use for :
+# slogin, ssh & sftp
+# because they all of them use ssh as a base.
+
+####################################################
+# INSTALLATION
+# on target:
+# place this file in /usr/local/bin/ssh-nagios-wrapper
+# chmod a+x /usr/local/bin/ssh-nagios-wrapper
+#
+# on initiator:
+# generate a ssh key with:
+# ssh-keygen
+#
+# on target:
+# copy the public key generated and paste it into authorized_keys2
+# prefix it in authorized_keys 2 with:
+# command="/usr/local/bin/ssh-nagios-wrapper",from="10.194.65.201"\
+# ,no-port-forwarding,no-X11-forwarding,no-agent-forwarding \
+# ssh-dss <the key>
+#
+# on initiator:
+# invoke your command eg:
+# /usr/bin/scp -qi /.ssh/nis-automount-spreadit_dsa /tmp/qq obsdns1:/tmp/qq
+# command >scp -t /tmp/qq< not allowed
+#
+# on target:
+# add in the LIST_ALLOW_COMMAND the command as return by the error message:
+# LIST_ALLOW_COMMAND=['scp -t /tmp/qq']
+####################################################
+
+################################################################################
+# EDIT THIS
+
+LIST_ALLOW_COMMAND = \
+  [
+  '^/usr/local/nagios/libexec/check_.*$',
+  '^/usr/bin/sudo /usr/local/nagios/libexec/check_.*$',
+  ]
+
+# STOP EDITING
+################################################################################
+
+import os,sys
+import re
+from subprocess import call
+
+# format LIST_ALLOW_COMMAND for Regular Expressions
+for i in range(0, len(LIST_ALLOW_COMMAND)):
+   LIST_ALLOW_COMMAND[i] = " ".join(re.split('\s+', LIST_ALLOW_COMMAND[i].strip()))
+
+# get the wanted command
+try:
+   command = os.environ['SSH_ORIGINAL_COMMAND']
+   command = " ".join(re.split('\s+', command.strip()))
+except:
+   print "environment variable SSH_ORIGINAL_COMMAND not set"
+   sys.exit(1)
+
+# check if allowed and if so, run!
+for allow_command in LIST_ALLOW_COMMAND:
+   if re.match(allow_command,  command):
+      retcode = call(command, shell=True)
+      sys.exit(retcode)
+else:
+   print "Not allowed :", command
+   sys.exit(3)
+
+
