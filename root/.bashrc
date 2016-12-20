@@ -43,25 +43,54 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-force_color_prompt=yes
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+# force_color_prompt=yes
+#
+# if [ -n "$force_color_prompt" ]; then
+#     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+# 	# We have color support; assume it's compliant with Ecma-48
+# 	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+# 	# a case would tend to support setf rather than setaf.)
+# 	color_prompt=yes
+#     else
+# 	color_prompt=
+#     fi
+# fi
+#
+# if [ "$color_prompt" = yes ]; then
+#     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+# else
+#     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+# fi
+# unset color_prompt force_color_prompt
+
+__prompt_command() {
+    local EXIT="$?"             # This needs to be first
+    PS1="${debian_chroot:+($debian_chroot)}"
+
+    local Red='\[\e[0;31m\]'
+    local BRed='\[\e[1;31m\]'
+    local RBRed='\[\e[1;41m\]'
+    local Gre='\[\e[0;32m\]'
+    local BBlu='\[\e[1;34m\]'
+    local RBBlu='\[\e[1;44m\]'
+    local Pur='\[\e[1;35m\]'
+    local RCol='\[\e[0m\]'
+
+    if [ $EXIT != 0 ]; then
+        PS1+="${Red}${EXIT} ${RCol}"
     else
-	color_prompt=
+        PS1+="${Gre}${EXIT} ${RCol}"
     fi
-fi
+    if [ $USER == "root" ]; then
+        local U="${RBRed}\u${RCol}"
+    else
+        local U="${RBBlu}\u${RCol}"
+    fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+    PS1+="${U}${RBBlu}@\h${RCol}:${Pur}\w${RCol}\$ "
+}
+PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -159,7 +188,7 @@ function saveBack {
 }
 
 # Stores a password in env variable ${PASS}
-pww () 
+pww ()
 {
     echo -n "Password in \$PASS: ";
     stty -echo;
