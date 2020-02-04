@@ -1,21 +1,38 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # Bancal Samuel - ENACIT1
 # 100922
 # 101210
 
-# ! Modify :  ~/projects/enacit1logs/tools/enacit1logs.py !
+# ! Modify :  ~/Projects/enacit1logs/tools/enacit1logs.py !
 
-# ! Copied to ~/Documents/projets/lucid_ssie/customize_lucid_ssie/resources/usr/local/bin/enacit1logs.py !
-# ! by        ~/Documents/projets/lucid_ssie/customize_lucid_ssie/build_customization_utilities.sh !
+# # ! Copied to ~/Documents/projets/lucid_ssie/customize_lucid_ssie/resources/usr/local/bin/enacit1logs.py !
+# # ! by        ~/Documents/projets/lucid_ssie/customize_lucid_ssie/build_customization_utilities.sh !
+#
+# # ! Copied to ~/Projects/precise_ssie/customize_precise_ssie/root/usr/local/bin/enacit1logs.py !
+# # ! by        ~/Projects/precise_ssie/tools/build_precise_ssie_tarball.sh !
+
+# # ! Copied to ~/Projects/trusty_ssie/customize_trusty_ssie/root/usr/local/bin/enacit1logs.py !
+# # ! by        ~/Projects/trusty_ssie/tools/build_trusty_ssie_tarball.sh !
+
+# ! Copied to ~/Projects/xenial-ssie/customize_xenial-ssie/features/global/root/usr/local/bin/enacit1logs.py !
+# ! by        ~/Projects/xenial-ssie/tools/build_xenial-ssie_tarball.sh !
+
+# ! Copied to ~/Projects/bionic-ssie/customize_bionic-ssie/features/global/root/usr/local/bin/enacit1logs.py !
+# ! By hand ;) ... but 2to3 !
 
 # ! Copied to /usr/local/bin/enacit1logs.py !
-# ! Copied to /home/bancal/server_basics/usr/local/bin/enacit1logs.py !
+# ! Copied to ~/Projects/server_basics/usr/local/bin/enacit1logs.py !
 # ! By hand ;) !
+
+# ! Copied to ~/Projects/enacdrives/client/enacit1logs.py !
+# ! By hand ;) ... but 2to3 !
 
 
 # Implemented in :
 # - SSIE room
-# - mount_filers
+# - ENACdrives
 # - Duplicity backups
 
 import sys
@@ -25,16 +42,18 @@ import getopt
 
 TEST = False
 
-SERVERNAME = "enacit1adm1.epfl.ch"
+SERVERNAME = "enacit1logs.epfl.ch"
 if TEST:
     SERVERURL = "http://%s/enacit1logs_test/xml_rpc" % SERVERNAME
 else:
     SERVERURL = "http://%s/enacit1logs/xml_rpc" % SERVERNAME
 
+
 class SendLogException(Exception):
     def __init__(self, msg):
         Exception.__init__(self)
         self.msg = msg
+
 
 def usage():
     print """%s  -h|--help
@@ -43,18 +62,20 @@ def usage():
 %s                                                          [-f|--file -] # Read from stdin""" % \
         (sys.argv[0], " " * len(sys.argv[0]), " " * len(sys.argv[0]), " " * len(sys.argv[0]))
 
+
 def ping():
     try:
         rpc = xmlrpclib.ServerProxy(SERVERURL)
         return rpc.ping()
-    except (socket.error, xmlrpclib.ProtocolError), inst :
+    except (socket.error, xmlrpclib.ProtocolError), inst:
         raise SendLogException("Server %s is not responding!\n%s" % (SERVERNAME, inst))
 
-def send(message, tags, user = ''):
+
+def send(message, tags, user=''):
     try:
         rpc = xmlrpclib.ServerProxy(SERVERURL)
         return rpc.post_log(message, tags, user)
-    except (socket.error, xmlrpclib.ProtocolError), inst :
+    except (socket.error, xmlrpclib.ProtocolError), inst:
         raise SendLogException("Server %s is not responding!\n%s" % (SERVERNAME, inst))
 
 if __name__ == "__main__":
@@ -88,7 +109,7 @@ if __name__ == "__main__":
             print "Error: one --message or --file has to be given"
             usage()
             sys.exit(1)
-    
+
     # Get Message
     message = ""
     if "m" in options:
@@ -101,11 +122,11 @@ if __name__ == "__main__":
         for line in f.readlines():
             message += line
         f.close()
-    
+
     if not options["n"] and message == "":
         print "Nothing to send."
         sys.exit()
-    
+
     if options["n"]:
         try:
             print "ping ... %s" % ping()

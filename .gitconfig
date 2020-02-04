@@ -1,17 +1,19 @@
 [user]
-	name = Samuel Bancal
-	email = Samuel.Bancal@epfl.ch
-	signingkey = E3573AC1
+		name = Samuel Bancal
+		email = Samuel.Bancal@epfl.ch
+		signingkey = E3573AC1
 [core]
-	editor = vim
+		editor = vim
 [merge]
-	tool = meld
+		tool = meld
 [alias]
-	add = add --all
-	meld = difftool --dir-diff
-	unstage = reset HEAD --
-	last = log -1 HEAD
-	visual = !gitk
-	lg = log --oneline --all --graph --decorate
+		add = add --all
+		meld = difftool --dir-diff
+		unstage = reset HEAD --
+		last = log -1 HEAD
+		visual = !gitk
+		lg = log --pretty=format:'%C(auto)%h %C(normal dim)%ai%C(reset) %C(auto)%D %s' --all --graph
+		p = !git checkout HEAD^ && git lg
+		n = !git checkout $(git log --oneline --ancestry-path HEAD..master | tail -1 | awk '{ print $1 }') && git lg
 [push]
-	default = simple
+		default = simple

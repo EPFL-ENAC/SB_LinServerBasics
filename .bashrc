@@ -64,33 +64,30 @@ esac
 # fi
 # unset color_prompt force_color_prompt
 
-__prompt_command() {
-    local EXIT="$?"             # This needs to be first
-    PS1="${debian_chroot:+($debian_chroot)}"
+PS1="\$(
+__PS1_EXITED="\$?";  # Has to be the 1st
+__PS1_Red='\[\e[0;31m\]';
+__PS1_BRed='\[\e[1;31m\]';
+__PS1_RBRed='\[\e[1;41m\]';
+__PS1_Gre='\[\e[0;32m\]';
+__PS1_BBlu='\[\e[1;34m\]';
+__PS1_RBBlu='\[\e[1;44m\]';
+__PS1_Pur='\[\e[1;35m\]';
+__PS1_RCol='\[\e[0m\]';
 
-    local Red='\[\e[0;31m\]'
-    local BRed='\[\e[1;31m\]'
-    local RBRed='\[\e[1;41m\]'
-    local Gre='\[\e[0;32m\]'
-    local BBlu='\[\e[1;34m\]'
-    local RBBlu='\[\e[1;44m\]'
-    local Pur='\[\e[1;35m\]'
-    local RCol='\[\e[0m\]'
-
-    if [ $EXIT != 0 ]; then
-        PS1+="${Red}${EXIT} ${RCol}"
-    else
-        PS1+="${Gre}${EXIT} ${RCol}"
-    fi
-    if [ $USER == "root" ]; then
-        local U="${RBRed}\u${RCol}"
-    else
-        local U="${RBBlu}\u${RCol}"
-    fi
-
-    PS1+="${U}${RBBlu}@\h${RCol}:${Pur}\w${RCol}\$ "
-}
-PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
+echo -n \${debian_chroot:+(\$debian_chroot)};
+if [ \$__PS1_EXITED == 0 ]; then
+  echo -n \"\${__PS1_Gre}\${__PS1_EXITED} \${__PS1_RCol}\"
+else
+  echo -n \"\${__PS1_Red}\${__PS1_EXITED} \${__PS1_RCol}\"
+fi
+if [ $USER == "root" ]; then
+  __PS1_U=\"\${__PS1_RBRed}\u\${__PS1_RCol}\"
+else
+  __PS1_U=\"\${__PS1_RBBlu}\u\${__PS1_RCol}\"
+fi
+echo -n \"\${__PS1_U}\${__PS1_RBBlu}@\h\${__PS1_RCol}:\${__PS1_Pur}\w\${__PS1_RCol}\\$ \"
+)"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -124,6 +121,7 @@ alias l='ls -CF'
 alias s='cd ..'
 alias h='history | less'
 alias ssh='ssh -Y'
+alias rnd='< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;'
 
 export EDITOR=vim
 export LC_ALL=en_US.UTF-8
@@ -260,3 +258,10 @@ function title3 {
     echo "### ---> $@ <---"
     echo
 }
+
+mkcd ()
+{
+  mkdir -p -- "$1" &&
+  cd -- "$1"
+}
+
