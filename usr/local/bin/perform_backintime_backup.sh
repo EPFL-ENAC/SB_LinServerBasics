@@ -30,7 +30,7 @@ r 0 /usr/bin/nice -n 19 /usr/bin/ionice -c2 -n7 /usr/bin/backintime backup-job
 
 # Central-Log
 if [ "${email_the_admin}" = true ]; then
-    /usr/local/bin/enacit1logs.py -t server_backintime -t notify_bancal -f ${log_file}
+    /usr/local/bin/enacit1logs.py -t server_backintime -t notify -f ${log_file}
 else
     /usr/local/bin/enacit1logs.py -t server_backintime -f ${log_file}
 fi

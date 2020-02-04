@@ -1,7 +1,8 @@
 [user]
-		name = Samuel Bancal
-		email = Samuel.Bancal@epfl.ch
-		signingkey = E3573AC1
+		# Set it with
+		# git config --global user.name "FirstName LastName"
+		# git config --global user.email "FirstName.LastName@epfl.ch"
+		# git config --global user.signingKey "<KeyHash>"
 [core]
 		editor = vim
 [merge]

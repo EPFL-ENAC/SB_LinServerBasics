@@ -59,7 +59,7 @@ r 0 umount ${mnt_folder}
 
 # Central-Log
 if [ "${email_the_admin}" = true ]; then
-    /usr/local/bin/enacit1logs.py -t server_mysqldump -t notify_bancal -f ${log_file}
+    /usr/local/bin/enacit1logs.py -t server_mysqldump -t notify -f ${log_file}
 else
     /usr/local/bin/enacit1logs.py -t server_mysqldump -f ${log_file}
 fi
