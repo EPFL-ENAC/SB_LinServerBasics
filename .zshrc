@@ -122,6 +122,8 @@ alias glg='git lg'
 alias gml='git meld'
 #alias gljson='git log --pretty=format:\'{%n  "commit": "%H",%n  "parents": "%p",%n  "author_name": "%an",%n  "author_email": "%ae",%n  "date": "%ci",%n  "subject:"  "%s",%n  "body": "%b",%n  "files": [ COMMIT_HASH_%H  ]%n},\''
 
+alias dtnow='date +%F_%T | sed "s/://g"'
+
 export EDITOR=vim
 export LC_ALL=en_US.UTF-8
 
