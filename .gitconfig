@@ -18,3 +18,5 @@
 		n = !git checkout $(git log --oneline --ancestry-path HEAD..master | tail -1 | awk '{ print $1 }') && git lg
 [push]
 		default = simple
+[commit]
+		template = ~/.gitmessage.txt
