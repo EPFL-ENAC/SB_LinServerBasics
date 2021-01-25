@@ -159,7 +159,7 @@ prettyjson_w() {
 
 # Download file from lin-server-basics repo and save it at the right place.
 getfrom-lin-server-basics() {
-    https_source="https://gitlab.epfl.ch/enac-it/lin-server-basics/raw/master/"
+    https_source="https://raw.githubusercontent.com/EPFL-ENAC/SB_LinServerBasics/master/"
     filename=$1
     owner=$2
     mod=$3
