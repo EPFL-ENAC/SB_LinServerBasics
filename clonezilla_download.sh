@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CURRENT_RELEASE="20191024-eoan"
+CURRENT_RELEASE="20210127-groovy"
 
 FILEMANE="clonezilla-live-${CURRENT_RELEASE}-amd64.iso"
 URL="https://netcologne.dl.sourceforge.net/project/clonezilla/clonezilla_live_alternative/${CURRENT_RELEASE}/${FILEMANE}"
