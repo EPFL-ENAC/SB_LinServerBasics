@@ -1,0 +1,24 @@
+[user]
+	# Set it with
+	# git config --global user.name "FirstName LastName"
+	# git config --global user.email "FirstName.LastName@epfl.ch"
+	# git config --global user.signingKey "<KeyHash>"
+[core]
+	editor = vim
+[merge]
+	tool = meld
+[alias]
+	add = add --all
+	meld = difftool --dir-diff
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	visual = !gitk
+	lg = log --pretty=format:'%C(auto)%h %C(normal dim)%ai%C(reset) %C(auto)%D %s' --all --graph
+	p = !git checkout HEAD^ && git lg
+	n = !git checkout $(git log --oneline --ancestry-path HEAD..master | tail -1 | awk '{ print $1 }') && git lg
+[push]
+	default = simple
+[commit]
+	template = ~/.gitmessage.txt
+[init]
+	defaultBranch = main
